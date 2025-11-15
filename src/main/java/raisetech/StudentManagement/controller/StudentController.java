@@ -24,24 +24,38 @@ public class StudentController {
   private StudentConverter converter;
 
   @Autowired
-  public StudentController(StudentService service, StudentConverter converter) {
+  public StudentController(StudentService service, StudentConverter converter){
+
     this.service = service;
     this.converter = converter;
   }
 
-  @GetMapping("/studentList")
-  public String getStudentList(Model model) {
-    List<Student> students = service.searchStudentList();
-    List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
+    /**
+     * 受講生一覧検索です。
+     * 全件検索を行うので、条件指定を行いません。
+     *
+     * @return 受講生一覧（全件）
+     */
 
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
-//    return "studentList";
-    return "studentList";
-  }
+    @GetMapping("/studentList")
+    public List<StudentDetail> getStudentList() {
+      List<Student> students = service.searchStudentList();
+      List<StudentsCourses> studentsCourses = service.searchStudentsCourseList();
+      return converter.convertStudentDetails(students, studentsCourses);
+
+    }
+
+  /**
+   * 受講生検索です。
+   * IDに紐づく任意の受講生情報を取得します。
+   *
+   *
+   * @return 受講生
+   */
 
 
   @GetMapping("/student/{id}")
-  public List<StudentDetail> getStudentList(){
+  public List<StudentDetail> getStudent(){
     List<Student> students=service.searchStudentList();
     List<StudentsCourses> studentsCourses=service.searchStudentsCourseList();
     return  converter.convertStudentDetails(students,studentsCourses);
